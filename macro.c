@@ -1,29 +1,28 @@
 #include <stdio.h>
 #include <functional>
-/*
+
 #include "TCanvas.h"
 #include "TFile.h"
 #include "TH1.h"
-#include "TH1D.h"
-*/
-void macro(){
-//reading file
-TFile *dataFile = new TFile("data.root");
-//pointer to the histogram 
-TH1D * dataHist =(TH1D*)dataFile -> Get("combined");
-//Draw histogram...Actually E2 should carry the error bars
-dataHist -> Draw("E2");
 
+
+
+void macro(){
+
+TH1::AddDirectory(ROOT::kFALSE);//sets global switch: disabling references
+TFile dataFile = TFile("data.root");//reading file
+/*Canvas: area mapped to a window under the control of the display manager
+-Root sessions can have many of them open at any given time*/
+TCanvas * c = new TCanvas("combined", "combined", 400, 500);//1st horiz. 2cond vert.
+
+TH1F * dataHist =(TH1F*) dataFile -> Get("combined"); //pointer to the histogram 
+
+TF1 * func_bg = new TF1("func_bg", "[0] + [1] * x + [2] * exp(- x + [3])" );//parametrisation + linesettings
+func_bg -> SetParameters(30, -0.06, 800, 0.01);
+func_bg -> SetLineColor(kBlue);
+func_bg -> SetLineStyle(kDashDotted);
+
+dataHist -> Draw("E2");//Draw histogram - !Actually E2 should carry the error bars
+dataHist -> Fit("func_bg");//Draw our func_bg into same Histogram
 }
 //Plot the function on top of each the dataset. What do you observe
-/*
-double function(double x, double * parameter){
-    double result = parameter[0] + x*parameter[1] + parameter[2]*std::exp(-x*parameter[3]);
-    return result;
-}
-
-double parameter[4] = {30, -0.06, 800, 0.01};
-
-TF1 * func = new TF1(func,double function(double x, double * parameter), 3,300);
-func -> Draw();
-*/
