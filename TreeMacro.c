@@ -1,11 +1,17 @@
 #include <stdio.h>
- // TH1-Dim histogram base class
-void TreeMacro{
-   TH1::AddDirectory(kFalse); //Sets a global switch disabling the reference
+/*
+#include "TCanvas.h"
+#include "TFile.h"
+#include "TH1.h"
+#include "TH1D.h"
+*/
 
-   TFile * combined = new TFile("combined.root");//reading file
-   //pointer to the histogram 
-    TH1F * histoComb;
-   histoComb -> Draw("E2");//Draw it
-
-};
+void TreeMacro(){
+//reading file
+TFile *dataFile = new TFile("data.root");
+//pointer to the histogram 
+TH1D * dataHist =(TH1D*)dataFile -> Get("combined");
+//Draw histogram...Actually E2 should carry the error bars
+dataHist -> Draw("E2");
+//But running the program only creates the pdf
+}
