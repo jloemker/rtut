@@ -1,7 +1,8 @@
 //Obviously I don't need to include anything
 //using namespace
-void macro(){
 
+
+void macro(){
 gStyle->SetOptFit(1111);
 //Adds automaticall all information to the histogram
 /*  p = 1; Probability
@@ -24,10 +25,30 @@ func_bg -> SetParameters(30, -0.06, 800, 0.01);
 func_bg -> SetLineColor(kBlue);
 func_bg -> SetLineStyle(kDashDotted);
 
+
+//only for extra print in Terminal
+cout << "Chisquare/ndof -> Background :  " << func_bg -> GetChisquare()/52 << "  The propability for this function to be compatible is 0 !" << endl;
+
+TF1 * sign_func = new TF1("sign_func", "gaus");
+//sign_func -> SetParNames("N","") lets check default
+sign_func -> SetLineColor(kRed);
+sign_func -> SetLineStyle(kDotted);
+/* Gauss 3 Fitparameter: const, mu, sigma ----default Print in Histogram*/
+
+
 dataHist -> Draw("E2");//Draw histogram - !Actually E2 should carry the error bars: Draw error bars with rectangles
 dataHist -> Fit("func_bg");//Draw our func_bg into same Histogram
+dataHist -> Fit("sign_func");
 
-//only for print in Terminal
-cout << "Chisquare/ndof -> Bachground :  " << func_bg -> GetChisquare()/52 << "  The propability for this function to be compatible is 0 !" << endl;
+/*
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+the last fit is shown in the histogram as well as the combined data
+func_bg is not shown, but the values are printed in the terminal 
+!!!Chisquare bg is = 0; ?! 
+check out next step of the exercise and then carry the structure 
+tp prevent vales to be overwritten. 
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+*/
+
 }
 
