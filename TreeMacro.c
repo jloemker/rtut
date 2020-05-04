@@ -8,11 +8,11 @@ void TreeMacro(){
 	TTree * bg_Tree = (TTree*)bg_File->Get("btree");//pointer to the tree
     TTree * sig_Tree = (TTree*)sig_File->Get("stree");
 //################################################################################---Histograms
-    TH1F * bg_PT = new TH1F("bg_PT","p_T [GeV]",50,0,100);//(name, title, #bins, from, to)
-    TH1F * sig_PT = new TH1F("sig_PT","p_T [GeV]",50,0,100);
+    TH1F * bg_PT = new TH1F("bg_PT","p_T [GeV]",80,0,100);//(name, title, #bins, from, to)
+    TH1F * sig_PT = new TH1F("sig_PT","p_T [GeV]",80,0,100);
 
-    TH1F * bg_eta = new TH1F("bg_eta", "pseudo-rapidity", 20, -5, 5);
-    TH1F * sig_eta = new TH1F("sig_eta", "pseudo-rapidity", 20, -5, 5);   
+    TH1F * bg_eta = new TH1F("bg_eta", "pseudo-rapidity", 50, -5, 5);
+    TH1F * sig_eta = new TH1F("sig_eta", "pseudo-rapidity", 50, -5, 5);   
 
     TH1F * sig_phi = new TH1F("sig_phi", "azimuthal angle", 20, -3, 3);
     TH1F * bg_phi = new TH1F("bg_phi", "azimuthal angle", 20, -3, 3);
@@ -20,11 +20,11 @@ void TreeMacro(){
     TH1F * sig_E = new TH1F("sig_E", "Energy [GeV]", 100, 0, 700);
     TH1F * bg_E = new TH1F("bg_E", "Energy [GeV]", 100, 0, 700);
 //###############################################################################---Selection Histograms
-    TH1F * bg_PT_select= new TH1F("bg_PT_sel","p_T [GeV]",50,0,110);
-	TH1F * sig_PT_select = new TH1F("sig_PT_sel","p_T [GeV]",50,0,110);
+    TH1F * bg_PT_select= new TH1F("bg_PT_sel","p_T [GeV]",80,0,110);
+	TH1F * sig_PT_select = new TH1F("sig_PT_sel","p_T [GeV]",80,0,110);
 
-	TH1F * bg_eta_select = new TH1F("bg_eta_sel","#pseudo-rapidity",20,-5,5);
-	TH1F * sig_eta_select = new TH1F("sig_eta_sel","#pseudo-rapidity",20,-5,5);
+	TH1F * bg_eta_select = new TH1F("bg_eta_sel","#pseudo-rapidity",50,-5,5);
+	TH1F * sig_eta_select = new TH1F("sig_eta_sel","#pseudo-rapidity",50,-5,5);
 
 	TH1F * bg_phi_select = new TH1F("bg_phi_sel","#phi",20,-3.5,3.5);
 	TH1F * sig_phi_select = new TH1F("sig_phi_sel","#phi",20,-3.5,3.5);
@@ -54,7 +54,7 @@ void TreeMacro(){
     for(int l = 0; l < NEntries; l++){
         bg_Tree -> GetEntry(l);
         TLorentzVector v_bg(px, py, pz, E);
-        bool selection = (v_bg.Pt()>62.0 && v_bg.Pt()<85.0 && v_bg.E()>200 && v_bg.Eta()< 5 && v_bg.Eta()> -5);
+        bool selection = (v_bg.Pt()>40.0 && v_bg.Pt()<85.0 && v_bg.E()>100 && v_bg.Eta()< 5 && v_bg.Eta()> -5);
         //##############################################################################---Filling Histogram---BG
         bg_PT->Fill(v_bg.Pt());
 	    bg_eta->Fill(v_bg.Eta());
@@ -84,7 +84,7 @@ void TreeMacro(){
     for(int l = 0; l < NEntries; l++){
         sig_Tree -> GetEntry(l);
         TLorentzVector v_sig(px, py, pz, E);
-        bool selection = (v_sig.Pt()>62.0 && v_sig.Pt()<85.0 && v_sig.E()>200 && v_sig.Eta()< 5 && v_sig.Eta()> -5);
+        bool selection = (v_sig.Pt()>40.0 && v_sig.Pt()<85.0 && v_sig.E()>100 && v_sig.Eta()< 5 && v_sig.Eta()> -5);
         //##############################################################################---Filling Histogram---Sig
         sig_PT->Fill(v_sig.Pt());
 	    sig_eta->Fill(v_sig.Eta());
