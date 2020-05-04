@@ -30,6 +30,18 @@ void TreeMacro(){
 
 	TH1F * bg_E_select = new TH1F("bg_E_sel","Energy [GeV]",100,0,1000);
 	TH1F * sig_E_select = new TH1F("sig_E_sel","Energy [GeV]",100,0,1000);
+
+    TH2F * bg_PTvEta = new TH2F("bg_pTvEta","bg_pTvEta",100,0,110,50,0,1000);
+	TH2F * sig_PTvEta = new TH2F("sig_pTvEta","sig_pTvEta",100,0,110,50,0,1000);
+
+    TH2F * bg_pTvEta = new TH2F("bg_pTvEta","bg_pTvEta",100,0,110,50,0,1000);
+    TH2F * sig_pTvEta = new TH2F("sig_pTvEta","sig_pTvEta",100,0,110,50,0,1000);
+
+    TH2F * bg_phivE = new TH2F("bg_phivE","bg_phivE",100,0,110,50,0,1000);
+	TH2F * sig_phivE = new TH2F("sig_phivE","sig_phivE",100,0,110,50,0,1000);
+
+    TH2F * bg_pTvE = new TH2F("bg_pTvE","bg_pTvE",100,0,110,50,0,1000);
+	TH2F * sig_pTvE = new TH2F("sig_pTvE","sig_pTvE",100,0,110,50,0,1000);
 //################################################################################---Branches and Dataaccess---BG
     TBranch * branchPx = bg_Tree -> GetBranch("px");
     TBranch * branchPy = bg_Tree -> GetBranch("py");
@@ -56,6 +68,9 @@ void TreeMacro(){
 	    bg_eta->Fill(v_bg.Eta());
 	    bg_phi->Fill(v_bg.Phi());
         bg_E->Fill(v_bg.E());
+        bg_pTvEta->Fill(v_bg.Pt(),v_bg.Eta());
+        bg_phivE->Fill(v_bg.Phi(),v_bg.E());
+        bg_pTvE->Fill(v_bg.Pt(),v_bg.E());
         //##############################################################################---selection---BG
             if(selection){
             bg_PT_select->Fill(v_bg.Pt());
@@ -87,6 +102,9 @@ void TreeMacro(){
 	    sig_eta->Fill(v_sig.Eta());
 	    sig_phi->Fill(v_sig.Phi());
         sig_E->Fill(v_sig.E());
+        sig_pTvEta->Fill(v_sig.Pt(),v_sig.Eta());
+        sig_phivE->Fill(v_sig.Phi(),v_sig.E());
+        sig_pTvE->Fill(v_sig.Pt(),v_sig.E());
         //##############################################################################---selection---Sig
             if(selection){
             sig_PT_select->Fill(v_sig.Pt());
@@ -133,7 +151,7 @@ void TreeMacro(){
     bg_E->Draw("H");
     sig_E->Draw("HSAME");
 //################################################################################---Canvas_selection
-    TCanvas * c_PT_select = new TCanvas("PT_select","PT", 500, 500);
+    TCanvas * c_PT_select = new TCanvas("PT_select","PT_select", 500, 500);
     c_PT_select->SetLogy();// logarithmic view for current pad
     bg_PT_select->SetLineColor(kRed);
     bg_PT_select->SetFillColor(kRed);
@@ -169,30 +187,29 @@ void TreeMacro(){
     sig_E_select->SetFillColor(kBlue);
     bg_E_select->Draw("H");
     sig_E_select->Draw("HSAME");
+    //##############################################################################---2D
+    TCanvas * c_pTvEta = new TCanvas("pTvEta","pTvEta",600,600);
+	c_pTvEta->SetLogy();
+	bg_pTvEta->Draw("Col");
+	sig_pTvEta->Draw("ColSAME");
+
+    TCanvas * c_phivE = new TCanvas("phivE","phivE",600,600);
+	c_phivE->SetLogy();
+	bg_phivE->Draw("Col");
+	sig_phivE->Draw("ColSAME");
+
+    TCanvas * c_pTvE = new TCanvas("pTvE","pTvE",600,600);
+	c_pTvE->SetLogy();
+	bg_pTvE->Draw("Col");
+	sig_pTvE->Draw("ColSAME");
+    //################################################################################---Prints
+    cout << "Signal before Selection : " <<sig_PT->GetEntries() << " Total(with Bg) : " << sig_PT->GetEntries()+bg_PT->GetEntries() << endl;
+	cout  << "SignalEvents/Total: "<<sig_PT->GetEntries()/(sig_PT->GetEntries()+bg_PT->GetEntries()) << endl;
+	cout << "Signal After Selection : " <<sig_PT_select->GetEntries() << " Total: " << sig_PT_select->GetEntries()+bg_PT_select->GetEntries() << endl;
+	cout  << "S/Total: "<<sig_PT_select->GetEntries()/(sig_PT_select->GetEntries()+bg_PT_select->GetEntries()) << endl;
 }
 
 
 /*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-1)Open both ﬁles in an interactive ROOT session and start a TBrowser. 
-Check the content of these ﬁles and plot the stored variables. 
-Plot the background and signal events on top of each other, 
-can you ﬁnd a variable that achieves good separation between these processes?
-------------------------Bad Browser connection-------------------------
-2)Write a ROOT macro which opens both ﬁles and loops over all background and signal events.
-For each event, create a TLorentzVector from the stored three- momentum components and the energy. 
-Now ﬁll histograms containing the transverse momentum PT, the pseudo-rapidity η, the azimuthal
-angle φ phi and the energy of the four-vectors and plot the background and signal processes on top of each other.
---------------------------------DONE------------------------------------
-3)By studying the histograms ____________no Glasfaser____________,
-try to ﬁnd a selection which enriches the signal content. 
-Calculate the relative signal content by dividing the number of signal events by the total number
-of events in your selected sample. What’s the best separation you can achieve? 
-+ Some parameters as well as logarithmic scale should become asjusted.
-___________________________________________________________________________(90% DONE)
-To Do:
-4)Now start to look at correlations between the diﬀerent observables. 
-Create two-dimensional histograms where you plot meaningful combinations of (PT, η -> eta is defined by PL) 
-but also ,,Two-particle correlations in azimuthal angle and pseudorapidit"Cern 2017 (φ and E.) 
-Can you improve your cuts and the separation power?
-
+Alles Tutti Frutti- :) 
 */
